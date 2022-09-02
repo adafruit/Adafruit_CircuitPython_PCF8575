@@ -4,7 +4,7 @@
 
 """
 `adafruit_pcf8575`
-================================================================================
+==================
 
 CircuitPython library for Adafruit PCF8575 GPIO expander
 
@@ -16,7 +16,7 @@ Implementation Notes
 
 **Hardware:**
 
-* `Adafruit PCF8575 GPIO Expander <https://www.adafruit.com/product/5611>`
+* `Adafruit PCF8575 GPIO Expander <https://www.adafruit.com/product/5611>`_
 
 **Software and Dependencies:**
 
