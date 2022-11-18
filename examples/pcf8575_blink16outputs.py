@@ -8,7 +8,8 @@ import adafruit_pcf8575
 
 print("PCF8575 16 output LED blink test")
 
-i2c = board.I2C()
+i2c = board.I2C()  # uses board.SCL and board.SDA
+# i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
 pcf = adafruit_pcf8575.PCF8575(i2c)
 
 while True:
