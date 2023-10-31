@@ -48,12 +48,16 @@ class PCF8575:
 
     :param ~busio.I2C i2c_bus: The I2C bus the PCF8575 is connected to.
     :param int address: The I2C device address. Default is :const:`0x20`
+    :param int gpios: The number of GPIO pins (8 or 16). Default is 16.
     """
 
     def __init__(
-        self, i2c_bus: busio.I2C, address: int = PCF8575_I2CADDR_DEFAULT
+        self, i2c_bus: busio.I2C, address: int = PCF8575_I2CADDR_DEFAULT,
+        gpios: int = 16
     ) -> None:
         self.i2c_device = I2CDevice(i2c_bus, address)
+        self._gpios = gpios
+        assert self._gpios == 8 or self._gpios == 16
         self._writebuf = bytearray([0, 0])
         self._readbuf = bytearray([0, 0])
 
@@ -61,13 +65,13 @@ class PCF8575:
         """Convenience function to create an instance of the DigitalInOut class
         pointing at the specified pin of this PCF8575 device.
 
-        :param int pin: pin to use for digital IO, 0 to 15
+        :param int pin: pin to use for digital IO
         """
-        assert 0 <= pin <= 15
+        assert 0 <= pin <= self._gpios
         return DigitalInOut(pin, self)
 
     def write_gpio(self, val: int) -> None:
-        """Write a full 16-bit value to the GPIO register
+        """Write a full value to the GPIO register
 
         :param int val: The value to write to the register
         """
@@ -75,12 +79,12 @@ class PCF8575:
         self._writebuf[0] = val & 0xFF
         self._writebuf[1] = (val >> 8) & 0xFF
         with self.i2c_device as i2c:
-            i2c.write(self._writebuf)
+            i2c.write(self._writebuf, end=self._gpios >> 3)
 
     def read_gpio(self) -> int:
-        """Read the full 16-bits of data from the GPIO register"""
+        """Read the full data from the GPIO register"""
         with self.i2c_device as i2c:
-            i2c.readinto(self._readbuf)
+            i2c.readinto(self._readbuf, end=self._gpios >> 3)
         return self._readbuf[0] | (self._readbuf[1] << 8)
 
     def write_pin(self, pin: int, val: bool) -> None:
@@ -128,7 +132,7 @@ class DigitalInOut:
     """
 
     def __init__(self, pin_number: int, pcf: PCF8575) -> None:
-        """Specify the pin number of the PCF8575 0..15, and instance.
+        """Specify the pin number of the PCF8575, and instance.
 
         :param int pin_number: The pin number
         :param PCF8575 pfc: The associated PCF8575 instance
