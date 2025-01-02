@@ -87,7 +87,7 @@ class PCF8575:
         """Set a single GPIO pin high/pulled-up or driven low
 
         :param int pin: The pin number
-        :param bool vale: The state to set
+        :param bool val: The state to set
         """
 
         buff = self._writebuf[0] | (self._writebuf[1] << 8)
@@ -104,7 +104,7 @@ class PCF8575:
         :param int pin: The pin number
         """
 
-        return (self.read_gpio() >> pin) & 0x1
+        return bool((self.read_gpio() >> pin) & 0x1)
 
 
 """
@@ -131,7 +131,7 @@ class DigitalInOut:
         """Specify the pin number of the PCF8575 0..15, and instance.
 
         :param int pin_number: The pin number
-        :param PCF8575 pfc: The associated PCF8575 instance
+        :param PCF8575 pcf: The associated PCF8575 instance
         """
 
         self._pin = pin_number
