@@ -104,7 +104,7 @@ class PCF8575:
         :param int pin: The pin number
         """
 
-        return bool((self.read_gpio() >> pin) & 0x1)
+        return ((self.read_gpio() >> pin) & 0x1) == 1
 
 
 """
