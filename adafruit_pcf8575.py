@@ -28,14 +28,15 @@ Implementation Notes
 
 try:
     from typing import Optional
+
     import busio
 except ImportError:
     pass
 
 
+import digitalio
 from adafruit_bus_device.i2c_device import I2CDevice
 from micropython import const
-import digitalio
 
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_PCF8575.git"
@@ -50,9 +51,7 @@ class PCF8575:
     :param int address: The I2C device address. Default is :const:`0x20`
     """
 
-    def __init__(
-        self, i2c_bus: busio.I2C, address: int = PCF8575_I2CADDR_DEFAULT
-    ) -> None:
+    def __init__(self, i2c_bus: busio.I2C, address: int = PCF8575_I2CADDR_DEFAULT) -> None:
         self.i2c_device = I2CDevice(i2c_bus, address)
         self._writebuf = bytearray([0, 0])
         self._readbuf = bytearray([0, 0])
@@ -136,15 +135,11 @@ class DigitalInOut:
 
         self._pin = pin_number
         self._pcf = pcf
-        self._dir = (
-            digitalio.Direction.INPUT
-        )  # this is meaningless but we need something!
+        self._dir = digitalio.Direction.INPUT  # this is meaningless but we need something!
 
     # kwargs in switch functions below are _necessary_ for compatibility
     # with DigitalInout class (which allows specifying pull, etc. which
-    # is unused by this class).  Do not remove them, instead turn off pylint
-    # in this case.
-    # pylint: disable=unused-argument
+    # is unused by this class).
     def switch_to_output(self, value: bool = False, **kwargs) -> None:
         """Switch the pin state to a digital output with the provided starting
         value (True/False for high or low, default is False/low).
@@ -169,8 +164,6 @@ class DigitalInOut:
 
         self.direction = digitalio.Direction.INPUT
         self.pull = pull
-
-    # pylint: enable=unused-argument
 
     @property
     def value(self) -> bool:

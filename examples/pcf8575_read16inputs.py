@@ -3,7 +3,9 @@
 # SPDX-License-Identifier: Unlicense
 
 import time
+
 import board
+
 import adafruit_pcf8575
 
 print("PCF8575 16 input button test")
